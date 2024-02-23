@@ -8,7 +8,9 @@
     @model Movie
 
     <h2>Add New Movie</h2>
-    <form asp-action="AddMovie" asp-controller="Home" method="post">
+    <form  method="post">
+        
+        <input asp-for="MovieId" type="hidden" />
         <label asp-for="Title">Title:</label>
         <input asp-for="Title" class="form-control" required />
         <span asp-validation-for="Title" class="text-danger"></span>
@@ -35,10 +37,6 @@
         <span asp-validation-for="Rating" class="text-danger"></span>
         <br />
 
-        <label asp-for="Category">Category:</label>
-        <input asp-for="Category" class="form-control" />
-        <br />
-
         <label asp-for="Edited">Edited:</label>
         <input asp-for="Edited" class="form-check-input" />
         <br />
@@ -51,6 +49,14 @@
         <input asp-for="Notes" class="form-control" maxlength="25" />
         <span asp-validation-for="Notes" class="text-danger"></span>
         <br />
+
+        <select asp-for="CategoryId">
+            <option value="">Select a Category</option>
+            @foreach (Category cat in ViewBag.Categories)
+            {
+                <option value="@cat.CategoryId">@cat.CategoryName</option>
+            }
+        </select>
 
         <button type="submit" class="btn btn-primary">Add Movie</button>
     </form>

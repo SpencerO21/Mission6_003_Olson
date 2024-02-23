@@ -6,9 +6,10 @@ namespace Mission6_003_Olson.Models
     {
         public MovieContext(DbContextOptions<MovieContext> options) : base (options)
         {
-
-        }   
+  
+        }
 
         public DbSet<Movie> Movies { get; set;}
+        public DbSet<Category> Categories { get; set;}
     }
 }

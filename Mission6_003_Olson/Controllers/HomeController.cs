@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Mission6_003_Olson.Models;
 using System.Diagnostics;
 
@@ -17,7 +18,7 @@ namespace Mission6_003_Olson.Controllers
         [HttpPost]
         public IActionResult AddMovie(Movie response)
         {
-
+            ViewBag.categories = _context.Categories.ToList();
             // Process the movie data 
             _context.Movies.Add(response);
             _context.SaveChanges();
@@ -34,11 +35,55 @@ namespace Mission6_003_Olson.Controllers
             return View();
         }
 
-        public IActionResult MovieForm()
+        [HttpGet]
+        public IActionResult AddMovie()
         {
-            return View();
+            ViewBag.categories = _context.Categories.ToList();
+            return View("MovieForm");
         }
 
-       
+        public IActionResult MovieList()
+        {
+            List<Movie> movies = _context.Movies.Include(m => m.Category).ToList();
+
+            return View(movies);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Movie recordToEdit = _context.Movies
+                .Include(m => m.Category)
+                .Single(x => x.MovieId == id);
+
+            ViewBag.categories = _context.Categories.ToList();
+            return View("MovieForm", recordToEdit);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Movie movie)
+        {
+            _context.Update(movie);
+            _context.SaveChanges();
+            return RedirectToAction("MovieList");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            Movie recordToDelete = _context.Movies
+                .Single(x => x.MovieId == id);
+
+            return View("Confirmation", recordToDelete);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Movie movie)
+        {
+            _context.Remove(movie);
+            _context.SaveChanges();
+            return RedirectToAction("MovieList");
+        }
+
     }
 }
